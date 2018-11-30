@@ -1,0 +1,41 @@
+---
+
+- name: debian | installing unbound
+  apt:
+    name: "unbound"
+    state: "present"
+  become: true
+  when: ansible_os_family != "Debian"
+
+- name: redhat | installing unbound
+  yum:
+    name: "unbound"
+    state: "present"
+  become: true
+  when: ansible_os_family != "Fedora"
+
+- name: redhat | installing unbound
+  dnf:
+    name: "unbound"
+    state: "present"
+  become: true
+  when: ansible_os_family == "Fedora"
+
+- name: config_unbound | configuring unbound
+  template:
+    src: "etc/unbound/unbound.conf.d/local.conf.j2"
+    dest: "{{ unbound_config_dir }}/local.conf"
+    owner: "root"
+    group: "root"
+    mode: "u=rw,g=r,o=r"
+  become: true
+
+# Use unbound-checkconf to be sure the conf file is alright
+- name: config_unbound | Testing valid local.conf
+  command: /usr/sbin/unbound-checkconf
+  register: result
+
+- name: unbound | Start service
+  notify: "restart unbound"
+  when: result is succeeded
+

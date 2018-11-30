@@ -1,2 +1,19 @@
 ---
 # vars file for ansible-unbound
+---
+
+# Calculation to determine hosts total memory in mb
+unbound_host_memory: '{{ ansible_memtotal_mb }}'
+
+# Calculation to determine hosts number of threads
+unbound_host_threads: '{{ ansible_processor_cores * ansible_processor_count }}'
+
+# Defines optimzations to be set if unbound_enable_optimizations is true
+unbound_optimizations:
+  infra_cache_slabs: '{{ unbound_host_threads|int * 2 }}'
+  key_cache_slabs: '{{ unbound_host_threads|int * 2 }}'
+  msg_cache_size: '{{ (unbound_host_memory|int * 0.0312) | round | int }}m'
+  msg_cache_slabs: '{{ unbound_host_threads|int * 2 }}'
+  num_threads: '{{ unbound_host_threads }}'
+  rrset_cache_slabs: '{{ unbound_host_threads|int * 2 }}'
+  rrset_cache_size: '{{ (unbound_host_memory|int * 0.0625) | round | int }}m'

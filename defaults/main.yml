@@ -65,12 +65,6 @@ unbound_hide_identity: true
 # Enable to not answer version.server and version.bind queries.
 unbound_hide_version: true
 
-# Calculation to determine hosts total memory in mb
-unbound_host_memory: '{{ ansible_memtotal_mb }}'
-
-# Calculation to determine hosts number of threads
-unbound_host_threads: '{{ ansible_processor_cores * ansible_processor_count }}'
-
 # Defines interface addresses to listen on
 unbound_listen_addresses:
   - 0.0.0.0
@@ -81,18 +75,8 @@ unbound_listen_addresses:
 # Defines if all dns queries should be logged.
 unbound_log_queries: false
 
-# To log elsewhere, set 'use-syslog' to 'false' and set the log file location
-unbound_logfile: '/var/log/messages'
-
-# Defines optimzations to be set if unbound_enable_optimizations is true
-unbound_optimizations:
-  infra_cache_slabs: '{{ unbound_host_threads|int * 2 }}'
-  key_cache_slabs: '{{ unbound_host_threads|int * 2 }}'
-  msg_cache_size: '{{ (unbound_host_memory|int * 0.0312) | round | int }}m'
-  msg_cache_slabs: '{{ unbound_host_threads|int * 2 }}'
-  num_threads: '{{ unbound_host_threads }}'
-  rrset_cache_slabs: '{{ unbound_host_threads|int * 2 }}'
-  rrset_cache_size: '{{ (unbound_host_memory|int * 0.0625) | round | int }}m'
-
 # Default is to use syslog, which will log to /var/log/messages.
 unbound_use_syslog: true
+
+# To log elsewhere, set 'use-syslog' to 'false' and set the log file location
+unbound_logfile: '/var/log/messages'
