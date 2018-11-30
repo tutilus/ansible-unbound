@@ -4,6 +4,16 @@
 # Defines if unbound should be configured
 config_unbound: false
 
+# Define verbosity level
+# verbosity: 1
+
+# Defines interface addresses to listen on
+unbound_listen_addresses:
+  - 0.0.0.0
+#  - 127.0.0.1
+#  - ::1
+#  - '{{ ansible_default_ipv4.address }}'
+
 # Defines access controls for usage of unbound
 # Available actions (allow|deny|refuse|allow_snoop)
 unbound_access_control:
@@ -65,13 +75,6 @@ unbound_hide_identity: true
 # Enable to not answer version.server and version.bind queries.
 unbound_hide_version: true
 
-# Defines interface addresses to listen on
-unbound_listen_addresses:
-  - 0.0.0.0
-#  - 127.0.0.1
-#  - ::1
-#  - '{{ ansible_default_ipv4.address }}'
-
 # Defines if all dns queries should be logged.
 unbound_log_queries: false
 
@@ -80,3 +83,27 @@ unbound_use_syslog: true
 
 # To log elsewhere, set 'use-syslog' to 'false' and set the log file location
 unbound_logfile: '/var/log/messages'
+
+# Define if unbound should get 'roots' servers
+unbound_root_hints: false
+# Define root.hints path 
+unbound_root_hints_path: /var/lib/unbound/root.hints
+# Define url where get the root.hints file from
+unbound_root_hints_url: ftp://FTP.INTERNIC.NET/domain/named.cache
+
+# Define if unbound should block ads
+unbound_ads_blocker: false
+# Define ads servers list path 
+unbound_ads_servers_path: /var/lib/unbound/unbound_ad_servers
+# Define url where get the list from
+unbound_ads_servers_url: http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext
+
+# Will trust glue only if it is within the servers authority.
+# Harden against out of zone rrsets, to avoid spoofing attempts. 
+# Hardening queries multiple name servers for the same data to make
+# spoofing significantly harder and does not mandate dnssec.
+unbound_harden_glue: true
+
+# Define that upper and lower case letters are allowed in domain names, 
+# no significance is attached to the case. 
+unbound_use_caps: true

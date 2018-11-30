@@ -1,0 +1,5 @@
+   #!/bin/sh
+
+   # update file ads servers
+   curl -sS -L --compressed "{{ unbound_ads_servers_url }}" > {{ unbound_ads_servers_path }}
+   chown unbound:unbound {{ unbound_ads_servers_path }} 

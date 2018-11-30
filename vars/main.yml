@@ -1,6 +1,5 @@
 ---
 # vars file for ansible-unbound
----
 
 # Calculation to determine hosts total memory in mb
 unbound_host_memory: '{{ ansible_memtotal_mb }}'

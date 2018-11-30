@@ -5,14 +5,14 @@
     name: "unbound"
     state: "present"
   become: true
-  when: ansible_os_family != "Debian"
+  when: ansible_os_family == "Debian"
 
 - name: redhat | installing unbound
   yum:
     name: "unbound"
     state: "present"
   become: true
-  when: ansible_os_family != "Fedora"
+  when: ansible_os_family == "Redhat" 
 
 - name: redhat | installing unbound
   dnf:
@@ -29,13 +29,41 @@
     group: "root"
     mode: "u=rw,g=r,o=r"
   become: true
+  when: config_unbound
+
+- name: unbound | Adding servers to block ads 
+  get_url:
+    url: "{{ unbound_ads_servers_url }}"
+    dest: "{{ unbound_ads_servers_path }}"
+    owner: unbound
+    group: unbound
+  become: true
+  when: unbound_ads_blocker
+
+- name: unbound | Get ads servers script update
+  template:
+    src: etc/cron/unbound_ads.j2
+    dest: /etc/cron.monthly/unbound_ads
+    mode: "u=rwx,g=rx,o=r"
+  become: true
+  when: unbound_ads_blocker
+
+- name: unbound | Adding root.hints 
+  get_url:
+    url: "{{ unbound_root_hints_url }}"
+    dest: "{{ unbound_root_hints_path }}"
+  become: true
+  when: unbound_root_hints
+
+- name: unbound | Get ads servers script update
+  template:
+    src: etc/cron/unbound_hints.j2
+    dest: /etc/cron.monthly/unbound_hints
+    mode: "u=rwx,g=rx,o=r"
+  become: true
+  when: unbound_root_hints
 
 # Use unbound-checkconf to be sure the conf file is alright
 - name: config_unbound | Testing valid local.conf
   command: /usr/sbin/unbound-checkconf
-  register: result
-
-- name: unbound | Start service
   notify: "restart unbound"
-  when: result is succeeded
-

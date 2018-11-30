@@ -1,4 +1,7 @@
 server:
+{% if unbound_verbosity is defined and unbound_verbosity %}
+  verbosity: {{ unbound_verbosity }}
+{% endif %}
 {% if unbound_listen_addresses is defined %}
 {%   for item in unbound_listen_addresses %}
   interface: {{ item }}
@@ -31,7 +34,9 @@ server:
   msg-cache-size: {{ unbound_optimizations.msg_cache_size }}
 
   ###<--- End Optimizations -->
-
+{% endif %}
+{% if unbound_use_caps is defined and unbound_use_caps %}
+  use-caps-for-id: yes
 {% endif %}
 {% if unbound_hide_identity is defined and unbound_hide_identity %}
   hide-identity: yes
@@ -39,6 +44,9 @@ server:
 {% if unbound_hide_version is defined and unbound_hide_version %}
   hide-version: yes
 {% endif %}
+{% if unbound_harden_glue is defined and unbound_harden_glue %}
+  harden-glue: yes
+{% endif  %}
 {% if unbound_use_syslog is defined and unbound_use_syslog %}
   use-syslog: yes
 {% elif unbound_use_syslog is defined and not unbound_use_syslog %}
@@ -70,4 +78,10 @@ server:
     forward-addr: {{ fa }}
 {%     endfor %}
 {%   endfor %}
+{% endif %}
+{% if unbound_root_hints is defined and unbound_root_hints %}
+  root-hints: "{{ unbound_root_hints_path }}"
+{% endif %}
+{% if unbound_ads_blocker is defined and unbound_ads_blocker %}
+  include: "{{ unbound_ads_servers_path }}"
 {% endif %}
