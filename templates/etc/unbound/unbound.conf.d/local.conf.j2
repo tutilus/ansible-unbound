@@ -59,7 +59,7 @@ server:
 {% if unbound_authoritative_zones is defined %}
 {%   for item in unbound_authoritative_zones %}
   private-domain: "{{ item['zone'] }}"
-  local-zone: "{{ item['zone'] }}." static
+  local-zone: "{{ item['zone'] }}." {% if locale_zone_type is defined %}{{ locale_zone_type }}{% else %}static{% endif %}
 {%     for item2 in item['a_records'] %}
   local-data: "{{ item2['name'] }}.{{ item['zone'] }}. IN A {{ item2['ip'] }}"
 {%     endfor %}

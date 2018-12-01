@@ -30,6 +30,8 @@ unbound_access_control:
 # If you would like PTR(reverse) records to be created set
 # create_ptr_records: true
 # otherwise set create_ptr_records: false
+# If you would like to change the type of the local zone set
+# locale_zone_type to the desire type. Default value: static
 unbound_authoritative_zones: []
   # - zone: 'vagrant.local'
   #   a_records:
@@ -38,6 +40,7 @@ unbound_authoritative_zones: []
   #     - name: 'srv02'
   #       ip: 192.168.250.102
   #   create_ptr_records: true
+  #   locale_zone_type: static
 
 # Maximum lifetime of cached entries.
 # Default is 86400 seconds (1  day).
